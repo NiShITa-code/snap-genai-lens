@@ -11,6 +11,7 @@ A production-ready GenAI lens system that transforms selfies into artistic style
 ## 🎯 Problem Statement
 
 Modern AR lenses need to:
+
 - Transform faces in real-time
 - Preserve user identity (users want to look like themselves)
 - Work under mobile constraints (limited compute, latency requirements)
@@ -24,6 +25,7 @@ This project addresses these challenges using **face-aware generative AI** with 
 ## ✨ Key Features
 
 ### 🔒 Core Capabilities
+
 - ✅ **Face-aware preprocessing** with MediaPipe (468 landmarks)
 - ✅ **Multi-conditioning pipeline** (edges + landmarks + mask)
 - ✅ **Identity preservation** using face embeddings
@@ -32,6 +34,7 @@ This project addresses these challenges using **face-aware generative AI** with 
 - ✅ **Comprehensive evaluation** (CLIP, identity similarity, performance metrics)
 
 ### 🎨 Style Presets
+
 - Anime / Manga style
 - Cyberpunk aesthetic
 - Pencil sketch
@@ -137,12 +140,12 @@ python app.py
 
 Tested on **Tesla T4 GPU** (Colab/Kaggle):
 
-| Configuration | Steps | Precision | Latency | CLIP Score | Identity Score |
-|--------------|-------|-----------|---------|------------|----------------|
-| Fast         | 10    | FP16      | 0.6s    | 0.87       | 0.82          |
-| **Balanced** | **20**| **FP16**  | **1.2s**| **0.91**   | **0.89**      |
-| Quality      | 30    | FP16      | 1.8s    | 0.93       | 0.91          |
-| Max Quality  | 50    | FP32      | 4.2s    | 0.94       | 0.92          |
+| Configuration | Steps  | Precision | Latency  | CLIP Score | Identity Score |
+| ------------- | ------ | --------- | -------- | ---------- | -------------- |
+| Fast          | 10     | FP16      | 0.6s     | 0.87       | 0.82           |
+| **Balanced**  | **20** | **FP16**  | **1.2s** | **0.91**   | **0.89**       |
+| Quality       | 30     | FP16      | 1.8s     | 0.93       | 0.91           |
+| Max Quality   | 50     | FP32      | 4.2s     | 0.94       | 0.92           |
 
 **Recommended for production**: Balanced (20 steps, FP16) - best quality/latency tradeoff
 
@@ -182,6 +185,7 @@ snap-genai-lens/
 **Challenge**: Generic image generation doesn't respect facial structure.
 
 **Solution**: Multi-modal face awareness
+
 - MediaPipe Face Mesh (468 landmarks)
 - Bounding box detection with confidence scoring
 - Binary face mask generation
@@ -194,6 +198,7 @@ snap-genai-lens/
 **Challenge**: Single conditioning signals don't provide enough control.
 
 **Solution**: Weighted combination of:
+
 - **Canny edges** (0.6): Preserve overall structure
 - **Face landmarks** (0.4): Maintain facial geometry
 - **Face mask** (0.3): Focus generation on face region
@@ -205,6 +210,7 @@ snap-genai-lens/
 **Challenge**: Style transfer often loses the person's identity.
 
 **Solution**: Face embedding verification
+
 - Extract embeddings from original and generated
 - Compute cosine similarity
 - Threshold: >0.6 = preserved, >0.7 = high confidence
@@ -216,12 +222,14 @@ snap-genai-lens/
 **Challenge**: Diffusion models are too slow for real-time use.
 
 **Solution**: Multiple optimization strategies
+
 - FP16 precision (2x speedup, minimal quality loss)
 - Reduced diffusion steps (50 → 20)
 - Memory-efficient attention
 - Optimized scheduler (UniPC)
 
 **Tradeoff Analysis**:
+
 ```
 Steps: 50 → 20 = 2.5x speedup, 2% quality loss
 FP32 → FP16 = 2x speedup, <1% quality loss
@@ -233,6 +241,7 @@ Combined = 5x speedup, acceptable quality
 **Challenge**: Production systems must handle edge cases.
 
 **Solution**: Explicit failure detection
+
 - No face detected → inform user, suggest retry
 - Low confidence (<0.5) → warn about quality
 - Multiple faces → prompt to crop single face
@@ -245,45 +254,48 @@ Combined = 5x speedup, acceptable quality
 ## 📈 Evaluation Metrics
 
 ### Quality Metrics
+
 - **CLIP Similarity**: Semantic similarity between original and generated
 - **Identity Similarity**: Cosine similarity of face embeddings
 - **Style Alignment**: How well output matches style prompt
 - **Overall Quality**: Weighted average of above
 
 ### Performance Metrics
+
 - **Inference Time**: Time from input to output (milliseconds)
 - **FPS**: Frames per second (1 / inference_time)
 - **Memory Usage**: GPU VRAM consumption
 
 ### Robustness
+
 - **Face Detection Rate**: % of images with successful detection
 - **Failure Recovery**: How gracefully system handles errors
 
 ---
 
-## 🎯 Snap MLE Interview Alignment
-
-| JD Requirement | Project Feature | Evidence |
-|----------------|-----------------|----------|
-| Image & video generation | Diffusion-based stylization | Stable Diffusion + ControlNet |
-| AI Lenses | Face-aware conditioning | MediaPipe + landmark maps |
-| GenAI pipelines | End-to-end system | Input → conditioning → generation → eval |
-| Production thinking | Latency optimization | FP16, reduced steps, benchmarks |
-| Visual quality evaluation | Comprehensive metrics | CLIP, identity, human preference |
-| Mobile constraints | Optimization focus | 1s latency, memory-efficient |
-| Failure handling | Robust error recovery | Validation, confidence thresholds |
+| JD Requirement            | Project Feature             | Evidence                                 |
+| ------------------------- | --------------------------- | ---------------------------------------- |
+| Image & video generation  | Diffusion-based stylization | Stable Diffusion + ControlNet            |
+| AI Lenses                 | Face-aware conditioning     | MediaPipe + landmark maps                |
+| GenAI pipelines           | End-to-end system           | Input → conditioning → generation → eval |
+| Production thinking       | Latency optimization        | FP16, reduced steps, benchmarks          |
+| Visual quality evaluation | Comprehensive metrics       | CLIP, identity, human preference         |
+| Mobile constraints        | Optimization focus          | 1s latency, memory-efficient             |
+| Failure handling          | Robust error recovery       | Validation, confidence thresholds        |
 
 ---
 
 ## 🚨 Limitations & Future Work
 
 ### Current Limitations
+
 - Single-image only (no video/temporal consistency)
 - Limited to 512×512 resolution (mobile constraint)
 - Requires clear, frontal faces (not robust to extreme poses)
 - Uses simplified identity preservation (not IP-Adapter/InstantID)
 
 ### Future Enhancements
+
 1. **Temporal Consistency**: Video processing with frame-to-frame smoothing
 2. **Advanced Identity**: Integrate IP-Adapter or InstantID
 3. **Model Distillation**: Train smaller, faster student model
@@ -293,25 +305,29 @@ Combined = 5x speedup, acceptable quality
 
 ---
 
-## 💡 How This Would Scale at Snap
+## 💡 How This Would Scale
 
 ### Phase 1: Prototype → MVP
+
 - Current system runs on cloud GPUs
 - Gradio interface for internal testing
 - Gather user feedback on styles
 
 ### Phase 2: Optimization
+
 - Distill SD 1.5 → lightweight model
 - Quantize to INT8/INT4 for mobile
 - Reduce latency to <500ms
 
 ### Phase 3: Production
+
 - Deploy as API with CDN caching
 - A/B test quality vs. speed tradeoffs
 - Monitor identity preservation metrics
 - Implement model versioning
 
 ### Phase 4: Mobile
+
 - Port optimized model to ONNX
 - Run inference on-device (iOS/Android)
 - Use server fallback for complex styles
@@ -321,17 +337,20 @@ Combined = 5x speedup, acceptable quality
 ## 📚 Technical Stack
 
 ### Core ML
+
 - **PyTorch**: Deep learning framework
 - **Diffusers**: Stable Diffusion pipelines
 - **Transformers**: CLIP for evaluation
 - **ControlNet**: Conditioning integration
 
 ### Computer Vision
+
 - **MediaPipe**: Face detection & landmarks
 - **OpenCV**: Image processing
 - **InsightFace**: Face embedding (optional)
 
 ### Deployment
+
 - **Gradio**: Interactive demo
 - **Google Colab**: Free GPU access
 - **Kaggle**: Alternative GPU platform
@@ -341,12 +360,14 @@ Combined = 5x speedup, acceptable quality
 ## 🎓 Learning Resources
 
 ### Understanding This Project
+
 1. Read the Colab notebook (`snap_lens_demo.ipynb`)
 2. Run each cell and observe outputs
 3. Experiment with different styles and parameters
 4. Review evaluation metrics
 
 ### Key Concepts
+
 - **Stable Diffusion**: [Hugging Face Tutorial](https://huggingface.co/docs/diffusers/using-diffusers/sdxl)
 - **ControlNet**: [Paper](https://arxiv.org/abs/2302.05543)
 - **Face Recognition**: [InsightFace](https://github.com/deepinsight/insightface)
@@ -372,18 +393,12 @@ MIT License - feel free to use this for learning or portfolio purposes.
 
 ## 👤 Author
 
-**Nishita** (YOUR_NAME)
-- Portfolio: [YOUR_WEBSITE]
-- LinkedIn: [YOUR_LINKEDIN]
-- GitHub: [YOUR_GITHUB]
-
-**Built for**: Snap Inc. Graduate MLE – GenAI Role
+**Nishita**
 
 ---
 
 ## 🙏 Acknowledgments
 
-- Anthropic Claude for architecture guidance
 - Hugging Face for pretrained models
 - MediaPipe for face detection
 - Snap Inc. for inspiration
@@ -392,24 +407,25 @@ MIT License - feel free to use this for learning or portfolio purposes.
 
 ## 📞 Questions?
 
-If you're a Snap recruiter or interviewer reviewing this project:
+If you're a recruiter or interviewer reviewing this project:
 
 ### Quick Demo
+
 Run the Colab notebook in <5 minutes to see the full system in action.
 
 ### Key Files to Review
+
 1. `app.py`: End-to-end integration
 2. `models/inference.py`: Core diffusion pipeline
 3. `snap_lens_demo.ipynb`: Complete walkthrough
 
-### Interview Discussion Points
+<!-- ### Interview Discussion Points
+
 - Why multi-conditioning over single conditioning?
 - How would you deploy this to mobile?
 - What are the failure modes and how do you handle them?
 - How do you balance quality vs. latency?
 
-I'm prepared to discuss any aspect of this system in depth.
+I'm prepared to discuss any aspect of this system in depth. -->
 
 ---
-
-Made with 💙 for Snap GenAI Lens team
