@@ -273,18 +273,6 @@ Combined = 5x speedup, acceptable quality
 
 ---
 
-| JD Requirement            | Project Feature             | Evidence                                 |
-| ------------------------- | --------------------------- | ---------------------------------------- |
-| Image & video generation  | Diffusion-based stylization | Stable Diffusion + ControlNet            |
-| AI Lenses                 | Face-aware conditioning     | MediaPipe + landmark maps                |
-| GenAI pipelines           | End-to-end system           | Input → conditioning → generation → eval |
-| Production thinking       | Latency optimization        | FP16, reduced steps, benchmarks          |
-| Visual quality evaluation | Comprehensive metrics       | CLIP, identity, human preference         |
-| Mobile constraints        | Optimization focus          | 1s latency, memory-efficient             |
-| Failure handling          | Robust error recovery       | Validation, confidence thresholds        |
-
----
-
 ## 🚨 Limitations & Future Work
 
 ### Current Limitations
