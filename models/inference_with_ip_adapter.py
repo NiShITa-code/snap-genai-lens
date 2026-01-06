@@ -193,7 +193,7 @@ class IPAdapterControlNet:
             face_image: PIL Image of face
             
         Returns:
-            Image embeddings tensor
+            Image embeddings tensor projected to text embedding dimension
         """
         if self.image_encoder is None:
             return None
@@ -207,6 +207,21 @@ class IPAdapterControlNet:
         # Encode
         with torch.no_grad():
             image_embeds = self.image_encoder(image).image_embeds
+            
+            # Project to text embedding dimension (768 for SD 1.5)
+            # CLIP image embeds are usually 768 or 1024, text embeds are 768
+            if image_embeds.shape[-1] != 768:
+                # Create projection layer if needed
+                if not hasattr(self, 'image_proj'):
+                    self.image_proj = torch.nn.Linear(
+                        image_embeds.shape[-1], 
+                        768,
+                        bias=False
+                    ).to(self.device, dtype=self.dtype)
+                    # Initialize with identity-like projection
+                    torch.nn.init.eye_(self.image_proj.weight[:image_embeds.shape[-1], :])
+                
+                image_embeds = self.image_proj(image_embeds)
         
         return image_embeds
     
