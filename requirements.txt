@@ -1,0 +1,32 @@
+# Core ML libraries
+torch>=2.0.0
+torchvision>=0.15.0
+diffusers>=0.25.0
+transformers>=4.30.0
+accelerate>=0.20.0
+
+# Face detection and processing
+mediapipe>=0.10.0
+insightface>=0.7.3
+onnxruntime>=1.15.0
+
+# Image processing
+opencv-python>=4.8.0
+Pillow>=10.0.0
+scikit-image>=0.21.0
+
+# ControlNet and conditioning
+controlnet-aux>=0.0.6
+
+# Evaluation
+clip-score>=0.1.0
+lpips>=0.1.4
+
+# Demo interface
+gradio>=4.0.0
+
+# Utilities
+numpy>=1.24.0
+scipy>=1.11.0
+matplotlib>=3.7.0
+tqdm>=4.65.0
